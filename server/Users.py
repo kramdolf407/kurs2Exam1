@@ -62,7 +62,7 @@ class CollectionOfUsers:
 
     def readUsersFromFile(self):
         try:
-            file = open("users.txt",'r') # (this need to be "server/users.txt")
+            file = open("server/users.txt",'r') # (this need to be "server/users.txt")
             allLines = file.read().split('\n') # reading the entire text file to one variable (list)
             file.close()
         except:
@@ -113,7 +113,7 @@ class CollectionOfUsers:
             allContent+="\n"
 
         try:
-            file = open("users.txt",'w') # this need to be "server/users.txt"
+            file = open("server/users.txt",'w') # this need to be "server/users.txt"
             file.write(allContent)  # opening the txt file in write mode, adding the user database (the latest)
             file.close()
             return True
