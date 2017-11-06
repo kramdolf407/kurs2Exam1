@@ -1,7 +1,7 @@
 import socket
 import _thread
 import sys
-from server.Users import CollectionOfUsers
+from Users import CollectionOfUsers
 
 class SocketHandler:
     def __init__(self):
@@ -33,7 +33,7 @@ class SocketHandler:
             self.serverSocket.bind(('',int(port))) # server socket bind to '' (?)
         except:
             return "failed"
-        self.serverSocket.listen()
+        self.serverSocket.listen(9)
 
         self.list_of_known_clientSockets = []
         self.list_of_known_clientAddr = []
