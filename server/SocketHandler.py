@@ -14,7 +14,7 @@ class GuiHandler:
         return self.portToReturn
 
     def startMainGui(self): # main graphical window for chat server
-        self.server_input = input(": ")
+        self.server_input = input("")
         if self.server_input == "/quit":
             self.closeConnection()
         if self.server_input == "/kick":
@@ -51,16 +51,6 @@ class SocketHandler:
         self.users.writeUsersToFile() # here: the user-data in RAM is written to file, before closing
         sys.exit(0)
 
-    def startAccepting(self):
-        while True:
-            try:
-                clientSocket, clientAddr = self.serverSocket.accept() # the server waits for connection(s) by client(s)
-                self.list_of_unknown_clientSockets.append(clientSocket) # client-sockets are put in a list
-                self.list_of_unknown_clientAddr.append(clientAddr)
-                self.startReceiverThread(clientSocket, clientAddr)
-            except:
-                pass
-
     def startToAcceptConnection(self,port):
         try:
             self.serverSocket.bind(('',int(port))) # server socket bind to '' (?)
@@ -77,8 +67,20 @@ class SocketHandler:
         _thread.start_new_thread(self.startAccepting,())
         return "succeed"
 
+    def startAccepting(self):
+        while True:
+            try:
+                clientSocket, clientAddr = self.serverSocket.accept() # the server waits for connection(s) by client(s)
+                self.list_of_unknown_clientSockets.append(clientSocket) # client-sockets are put in a list
+                self.list_of_unknown_clientAddr.append(clientAddr)
+                self.startReceiverThread(clientSocket, clientAddr)
+            except:
+                pass
+
     def sendAndShowMsg(self, text): # this function show messages from clients in the server-GUI and forwards to other clients
         self.guiHandler.showMessage(text)
+        print("In sendAndShowMsg")
+        print(str(self.list_of_known_clientAddr))
         for clientSock in self.list_of_known_clientSockets:
             clientSock.send(str.encode(text))
 
