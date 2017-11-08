@@ -6,12 +6,12 @@ from Users import CollectionOfUsers
 class GuiHandler:
     def __init__(self,socketHandler_):
         self.socketHandler = socketHandler_
+        self.server_port = ""
 
     def getPort(self): # server intro GUI to select port for server
-        lab = input("Please enter a port to start the server with:\n")
-        self.portToReturn = ""
-        self.portToReturn = lab
-        return self.portToReturn
+        print("Please enter the server port:\n")
+        self.server_port = input()
+        return self.server_port
 
     def startMainGui(self): # main graphical window for chat server
         self.server_input = input("")

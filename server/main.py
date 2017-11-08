@@ -1,5 +1,5 @@
-from SocketHandler import SocketHandler
-from SocketHandler import GuiHandler
+from server.SocketHandler import SocketHandler
+from server.SocketHandler import GuiHandler
 
 socketHandler = SocketHandler()
 guiHandler = GuiHandler(socketHandler)
