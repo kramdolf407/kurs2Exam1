@@ -35,14 +35,17 @@ class GuiHandler:
 
         self.root = tkinter.Tk()
         scroll = tkinter.Scrollbar(self.root)
-        scroll.grid(row = 0, column = 1, sticky=tkinter.N+tkinter.S)
+        scroll.grid(row=0, column=1, sticky=tkinter.N+tkinter.S)
         self.chattContents = tkinter.Text(self.root, yscrollcommand  = scroll.set)
-        self.chattContents.grid(row = 0,column = 0)
+        self.chattContents.grid(row=0, column=0)
         scroll.config(command=self.chattContents.yview)
         self.entryOfUser = tkinter.Entry(self.root)
-        self.entryOfUser.grid(row = 1,column = 0)
-        self.buttonToTrigg = tkinter.Button(self.root, text = "enter", command = self.sendMsgBySocketHandler)
-        self.buttonToTrigg.grid(row = 1,column = 1)
+        self.entryOfUser.grid(row=1, column = 0)
+        self.entryOfUser.configure(state=tkinter.DISABLED)
+        self.buttonToTrigg = tkinter.Button(self.root, text="SEND")
+        self.buttonToTrigg.bind(sequence="<Return>", func=self.sendMsgBySocketHandler())
+        self.buttonToTrigg.grid(row=1, column=1)
+
 
         self.root.mainloop()
 
