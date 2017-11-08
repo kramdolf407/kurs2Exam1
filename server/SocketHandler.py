@@ -3,6 +3,40 @@ import _thread
 import sys
 from Users import CollectionOfUsers
 
+class GuiHandler:
+    def __init__(self,socketHandler_):
+        self.socketHandler = socketHandler_
+
+    def getPort(self): # server intro GUI to select port for server
+        lab = input("Please enter a port to start the server with:\n")
+        self.portToReturn = ""
+        self.portToReturn = lab
+        return self.portToReturn
+
+    def startMainGui(self): # main graphical window for chat server
+        self.server_input = input(": ")
+        if self.server_input == "/quit":
+            self.closeConnection()
+        if self.server_input == "/kick":
+            self.closeConnection()
+        else:
+            self.sendMsgBySocketHandler()
+
+    def sendMsgBySocketHandler(self):
+        self.socketHandler.sendAndShowMsg("Admin: " + self.server_input)
+
+    def closeConnection(self):
+        self.socketHandler.closeEveryThing()
+
+    def startGui(self):
+        self.startMainGui()
+
+    def showMessage(self,text):
+        print(text)
+
+    def showWarningMsg(self):
+        print("Couldn't bind port")
+
 class SocketHandler:
     def __init__(self):
         self.serverSocket= socket.socket(socket.AF_INET,socket.SOCK_STREAM) # creating the server socket, TCP
@@ -24,7 +58,6 @@ class SocketHandler:
                 self.list_of_unknown_clientSockets.append(clientSocket) # client-sockets are put in a list
                 self.list_of_unknown_clientAddr.append(clientAddr)
                 self.startReceiverThread(clientSocket, clientAddr)
-
             except:
                 pass
 

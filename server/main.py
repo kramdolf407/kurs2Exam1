@@ -1,5 +1,5 @@
-from GuiHandler import GuiHandler
 from SocketHandler import SocketHandler
+from SocketHandler import GuiHandler
 
 socketHandler = SocketHandler()
 guiHandler = GuiHandler(socketHandler)
