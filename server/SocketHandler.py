@@ -24,9 +24,18 @@ class GuiHandler:
             # TODO , remove the kicked user
 
             if args[0] == "#":
-                args.remove(args[0])
-                self.server_input = str(args)
-                print(self.server_input)
+                print(args)
+                new_args = self.server_input
+                new_args.replace('#','')
+
+                print(new_args)
+                # new_args = args.remove(args[0])
+                print(new_args)
+                self.server_input = str(new_args).replace('[', '').replace(']', '')
+                print(str(self.server_input))
+                #new_arg_repl = new_arg.replace('[', '').replace(']', '')
+                #self.server_input = str(new_arg_repl)
+                #print(self.server_input)
                 self.sendMsgBySocketHandler()
 
     def sendMsgBySocketHandler(self):
@@ -82,11 +91,14 @@ class SocketHandler:
             return "failed"
         self.serverSocket.listen(9)
 
+        self.list_of_known_usernames = []
+
         self.list_of_known_clientSockets = []
         self.list_of_known_clientAddr = []
 
         self.list_of_unknown_clientSockets = []
         self.list_of_unknown_clientAddr = []
+
 
         _thread.start_new_thread(self.startAccepting,())
         return "succeed"
@@ -109,6 +121,7 @@ class SocketHandler:
 
             self.list_of_known_clientSockets.append(clientSocket)
             self.list_of_known_clientAddr.append(clientAddr)
+            self.list_of_known_usernames.append(clientAddr)
 
             self.listenToknownClinet(clientSocket,clientAddr,username)
 
@@ -156,6 +169,7 @@ class SocketHandler:
             except:
                 self.list_of_known_clientSockets.remove(clientSocket)
                 self.list_of_known_clientAddr.remove(clientAddr)
+                self.list_of_known_usernames.remove(username)
                 self.sendAndShowMsg(username+" disconnected")
                 self.users.inactiveUser(username)
                 return
