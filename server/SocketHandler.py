@@ -21,18 +21,20 @@ class GuiHandler:
             if len(args) == 2 and args[0] == "/kick":
                 username = args[1]
                 self.sendMsgBySocketHandlerKicked(username)
+                for user in self.socketHandler.list_of_known_usernames:
+
             # TODO , remove the kicked user
 
             if args[0] == "#":
-                print(args)
-                new_args = self.server_input
-                new_args.replace('#','')
-
-                print(new_args)
+                #print(args)
+                #self.server_input.rstrip()
+                #new_args = self.server_input[0]
+                #print(new_args)
+                #new_args.replace('#','')
                 # new_args = args.remove(args[0])
-                print(new_args)
-                self.server_input = str(new_args).replace('[', '').replace(']', '')
-                print(str(self.server_input))
+                #print(new_args)
+                #self.server_input = str(new_args).replace('[', '').replace(']', '')
+                #print(str(self.server_input))
                 #new_arg_repl = new_arg.replace('[', '').replace(']', '')
                 #self.server_input = str(new_arg_repl)
                 #print(self.server_input)
