@@ -42,6 +42,7 @@ class GuiHandler:
         self.entryOfUser = tkinter.Entry(self.root)
         self.entryOfUser.grid(row=1, column = 0)
         self.buttonToTrigg = tkinter.Button(self.root, text="SEND")
+        self.buttonToTrigg.focus_set()
         self.buttonToTrigg.bind(sequence="<Return>", func=self.sendMsgBySocketHandler())
         self.buttonToTrigg.grid(row=1, column=1)
 
