@@ -12,52 +12,18 @@ class GuiHandler:
         self.server_port = input()
         return self.server_port
 
-    def startMainGui(self):  # main graphical window for chat server
-        while True:
-            self.server_input = input()
-            args = self.server_input.split(' ')
-            if len(args) == 1 and args[0] == "/quit":
-                self.sendMsgBySocketHandlerQuit()
-            if len(args) == 2 and args[0] == "/kick":
-                username = args[1]
-                self.sendMsgBySocketHandlerKicked(username)
-                for user in self.socketHandler.list_of_known_usernames:
-
-            # TODO , remove the kicked user
-
-            if args[0] == "#":
-                #print(args)
-                #self.server_input.rstrip()
-                #new_args = self.server_input[0]
-                #print(new_args)
-                #new_args.replace('#','')
-                # new_args = args.remove(args[0])
-                #print(new_args)
-                #self.server_input = str(new_args).replace('[', '').replace(']', '')
-                #print(str(self.server_input))
-                #new_arg_repl = new_arg.replace('[', '').replace(']', '')
-                #self.server_input = str(new_arg_repl)
-                #print(self.server_input)
-                self.sendMsgBySocketHandler()
-
-    def sendMsgBySocketHandler(self):
-        self.socketHandler.sendAndShowMsg("Admin: " + self.server_input)
-
     def sendMsgBySocketHandlerKicked(self, username):
         self.socketHandler.sendAndShowMsg("Admin kicked the user: " + username)
-
-    def sendMsgBySocketHandlerQuit(self):
-        self.socketHandler.sendAndShowMsg("Admin is now quiting! Bye!")
-        self.closeConnection()
 
     def closeConnection(self):
         self.socketHandler.closeEveryThing()
 
-    def startGui(self):
-        self.startMainGui()
-
     def showMessage(self,text):
         print(text)
+
+    def sendMsgBySocketHandlerQuit(self):
+        self.socketHandler.sendAndShowMsg("Admin is now quiting! Bye!")
+        self.closeConnection()
 
     def showWarningMsg(self):
         print("Couldn't bind port")
@@ -106,9 +72,29 @@ class SocketHandler:
         return "succeed"
 
     def sendAndShowMsg(self, text): # this function show messages from clients in the server-GUI and forwards to other clients
-        self.guiHandler.showMessage(text)
-        for clientSock in self.list_of_known_clientSockets:
-            clientSock.send(str.encode(text))
+        if text[0] == "#":
+            new_text = text[1:]
+            for clientSock in self.list_of_known_clientSockets:
+                clientSock.send(str.encode("Admin: " + new_text))
+            print(text)
+
+        elif text[:6] == "/close":
+            self.closeEveryThing()
+
+        elif text[:5] == "/kick":
+            print("/kick")
+            user = text[6:]
+            for i in range(len(self.list_of_known_usernames)):
+                print("In for loop")
+                print(user)
+                print(self.list_of_known_usernames)
+                print(i)
+                if self.list_of_known_usernames[i] == user:
+                    print(self.list_of_known_usernames)
+                    self.list_of_known_usernames.pop(i)
+                    self.list_of_known_clientSockets[i].close()
+                    print(self.list_of_known_usernames)
+                    break
 
     def startReceiverThread(self, clientSocket, clientAddr): # function to start new thread
         _thread.start_new_thread(self.startReceiving,(clientSocket,clientAddr,))
@@ -120,10 +106,9 @@ class SocketHandler:
             username = resultOfLogin
             self.list_of_unknown_clientSockets.remove(clientSocket)
             self.list_of_unknown_clientAddr.remove(clientAddr)
-
+            self.list_of_known_usernames.append(username)
             self.list_of_known_clientSockets.append(clientSocket)
             self.list_of_known_clientAddr.append(clientAddr)
-            self.list_of_known_usernames.append(clientAddr)
 
             self.listenToknownClinet(clientSocket,clientAddr,username)
 
@@ -167,11 +152,27 @@ class SocketHandler:
         while True:
             try:
                 msg = clientSocket.recv(1024).decode()
-                self.sendAndShowMsg(username + ": " + msg)
+                for clientSock in self.list_of_known_clientSockets:
+                    clientSock.send(str.encode(username+": " + msg))
+                print(username + ": " + msg)
+                # self.sendAndShowMsg(username + ": " + msg)
             except:
                 self.list_of_known_clientSockets.remove(clientSocket)
                 self.list_of_known_clientAddr.remove(clientAddr)
-                self.list_of_known_usernames.remove(username)
                 self.sendAndShowMsg(username+" disconnected")
                 self.users.inactiveUser(username)
                 return
+
+    def kickToknownclinet(self, counter_, username_):
+        self.counter = counter_
+        self.username = username_
+        print(self.counter)
+        print(self.username)
+        print(self.list_of_known_usernames)
+        print(self.list_of_known_clientAddr)
+        self.list_of_known_clientSockets.pop(self.counter)
+        self.list_of_known_clientAddr.pop(self.counter)
+        self.list_of_known_usernames.pop(self.counter)
+        self.users.inactiveUser(self.username)
+        print(self.list_of_known_usernames)
+        print(self.list_of_known_clientAddr)
