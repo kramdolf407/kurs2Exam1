@@ -17,8 +17,12 @@ class GuiHandler:
             self.server_input = input()
             if self.server_input == "/quit":
                 self.closeConnection()
-            if self.server_input == "/kick":
-                self.closeConnection()
+
+            text_var = self.server_input.split(" ")
+            if text_var[0] == "/kick":
+                for user in self.socketHandler.list_of_usernames:
+                    if user == text_var[1]:
+                        print("kick user: " + user)
             else:
                 self.sendMsgBySocketHandler()
 
@@ -41,14 +45,14 @@ class SocketHandler:
     def __init__(self):
         self.serverSocket= socket.socket(socket.AF_INET,socket.SOCK_STREAM) # creating the server socket, TCP
         self.users = CollectionOfUsers() # the list for user-objects is created
-        self.users.readUsersFromFile() # any previously registered users are loaded from file
+        self.users.readUsersFromFile("users.txt") # any previously registered users are loaded from file
 
     def setGuiHandler(self,guiHandler_):
         self.guiHandler = guiHandler_
 
     def closeEveryThing(self): # closing the server
         self.serverSocket.close()
-        self.users.writeUsersToFile() # here: the user-data in RAM is written to file, before closing
+        self.users.writeUsersToFile("users.txt") # here: the user-data in RAM is written to file, before closing
         sys.exit(0)
 
     def startAccepting(self):
@@ -73,6 +77,7 @@ class SocketHandler:
 
         self.list_of_unknown_clientSockets = []
         self.list_of_unknown_clientAddr = []
+        self.list_of_usernames = []
 
         _thread.start_new_thread(self.startAccepting,())
         return "succeed"
@@ -97,6 +102,7 @@ class SocketHandler:
             self.list_of_known_clientAddr.append(clientAddr)
 
             self.listenToknownClinet(clientSocket,clientAddr,username)
+            self.list_of_usernames.append(username)
 
     def listenToUnknownClinet(self,clientSocket, clientAddr):
         while True:

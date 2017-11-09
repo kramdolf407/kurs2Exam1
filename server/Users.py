@@ -60,9 +60,9 @@ class CollectionOfUsers:
 
         return "non"
 
-    def readUsersFromFile(self):
+    def readUsersFromFile(self, file):
         try:
-            file = open("users.txt",'r') # (this need to be "server/users.txt")
+            file = open(file,'r') # (this need to be "server/users.txt")
             allLines = file.read().split('\n') # reading the entire text file to one variable (list)
             file.close()
         except:
@@ -102,7 +102,7 @@ class CollectionOfUsers:
                 return True
 
 
-    def writeUsersToFile(self): # writing the content of the user-list in RAM to file
+    def writeUsersToFile(self, file): # writing the content of the user-list in RAM to file
         allContent = ""
 
         for user in self.list_of_users:
@@ -113,7 +113,7 @@ class CollectionOfUsers:
             allContent+="\n"
 
         try:
-            file = open("users.txt",'w') # this need to be "server/users.txt"
+            file = open(file,'w') # this need to be "server/users.txt"
             file.write(allContent)  # opening the txt file in write mode, adding the user database (the latest)
             file.close()
             return True
