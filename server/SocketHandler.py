@@ -32,14 +32,14 @@ class SocketHandler:
     def __init__(self):
         self.serverSocket= socket.socket(socket.AF_INET,socket.SOCK_STREAM) # creating the server socket, TCP
         self.users = CollectionOfUsers() # the list for user-objects is created
-        self.users.readUsersFromFile("users.txt") # any previously registered users are loaded from file
+        self.users.readUsersFromFile("server/users.txt") # any previously registered users are loaded from file
 
     def setGuiHandler(self,guiHandler_):
         self.guiHandler = guiHandler_
 
     def closeEveryThing(self): # closing the server
         self.serverSocket.close()
-        self.users.writeUsersToFile("users.txt") # here: the user-data in RAM is written to file, before closing
+        self.users.writeUsersToFile("server/users.txt") # here: the user-data in RAM is written to file, before closing
         sys.exit(0)
 
     def startAccepting(self):
@@ -166,13 +166,7 @@ class SocketHandler:
     def kickToknownclinet(self, counter_, username_):
         self.counter = counter_
         self.username = username_
-        print(self.counter)
-        print(self.username)
-        print(self.list_of_known_usernames)
-        print(self.list_of_known_clientAddr)
         self.list_of_known_clientSockets.pop(self.counter)
         self.list_of_known_clientAddr.pop(self.counter)
         self.list_of_known_usernames.pop(self.counter)
         self.users.inactiveUser(self.username)
-        print(self.list_of_known_usernames)
-        print(self.list_of_known_clientAddr)
