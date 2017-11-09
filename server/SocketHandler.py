@@ -16,9 +16,6 @@ class GuiHandler:
         while True:
             self.server_input = input()
             args = self.server_input.split(' ')
-            print("Printing args:")
-            print(args)
-            print(args[0])
             if len(args) == 1 and args[0] == "/quit":
                 self.sendMsgBySocketHandlerQuit()
             if len(args) == 2 and args[0] == "/kick":
