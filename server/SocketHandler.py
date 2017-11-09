@@ -24,6 +24,9 @@ class GuiHandler:
             # TODO , remove the kicked user
 
             if args[0] == "#":
+                args.remove(args[0])
+                self.server_input = str(args)
+                print(self.server_input)
                 self.sendMsgBySocketHandler()
 
     def sendMsgBySocketHandler(self):
