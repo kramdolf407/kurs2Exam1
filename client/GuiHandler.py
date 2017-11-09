@@ -50,7 +50,6 @@ class GuiHandler:
 
     def sendMsgBySocketHandler(self):
 
-        self.chattContents.configure(state=tkinter.NORMAL)
         self.socketHandler.sendMsg(self.entryOfUser.get())
         self.entryOfUser.delete(0, tkinter.END)
 
