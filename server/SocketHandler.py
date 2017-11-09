@@ -8,7 +8,7 @@ class GuiHandler:
         self.socketHandler = socketHandler_
 
     def getPort(self): # server intro GUI to select port for server
-        print("Please enter a server port:")
+        print("Please enter a server port: ")
         self.server_port = input()
         return self.server_port
 
@@ -20,20 +20,24 @@ class GuiHandler:
             print(args)
             print(args[0])
             if len(args) == 1 and args[0] == "/quit":
-                self.closeConnection()
+                self.sendMsgBySocketHandlerQuit()
             if len(args) == 2 and args[0] == "/kick":
                 username = args[1]
+                self.sendMsgBySocketHandlerKicked(username)
+            # TODO , remove the kicked user
 
-                # CollectionOfUsers.remove_user(username)
-                self.sendAndShowMsg(username + " got kicked!")
-                self.users.inactiveUser(username)
-                # if self.users.doesThisUserExistAndNotActive(username):
-                #    return username
             if args[0] == "#":
                 self.sendMsgBySocketHandler()
 
     def sendMsgBySocketHandler(self):
         self.socketHandler.sendAndShowMsg("Admin: " + self.server_input)
+
+    def sendMsgBySocketHandlerKicked(self, username):
+        self.socketHandler.sendAndShowMsg("Admin kicked the user: " + username)
+
+    def sendMsgBySocketHandlerQuit(self):
+        self.socketHandler.sendAndShowMsg("Admin is now quiting! Bye!")
+        self.closeConnection()
 
     def closeConnection(self):
         self.socketHandler.closeEveryThing()
@@ -51,14 +55,14 @@ class SocketHandler:
     def __init__(self):
         self.serverSocket= socket.socket(socket.AF_INET,socket.SOCK_STREAM) # creating the server socket, TCP
         self.users = CollectionOfUsers() # the list for user-objects is created
-        self.users.readUsersFromFile() # any previously registered users are loaded from file
+        self.users.readUsersFromFile("users.txt") # any previously registered users are loaded from file
 
     def setGuiHandler(self,guiHandler_):
         self.guiHandler = guiHandler_
 
     def closeEveryThing(self): # closing the server
         self.serverSocket.close()
-        self.users.writeUsersToFile() # here: the user-data in RAM is written to file, before closing
+        self.users.writeUsersToFile("users.txt") # here: the user-data in RAM is written to file, before closing
         sys.exit(0)
 
     def startAccepting(self):
