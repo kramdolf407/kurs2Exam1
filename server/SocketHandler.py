@@ -12,24 +12,14 @@ class GuiHandler:
         self.server_port = input()
         return self.server_port
 
-    def startMainGui(self):  # main graphical window for chat server
+    def startMainGui(self): # main graphical window for chat server
         while True:
             self.server_input = input()
-            args = self.server_input.split(' ')
-            print("Printing args:")
-            print(args)
-            print(args[0])
-            if len(args) == 1 and args[0] == "/quit":
+            if self.server_input == "/quit":
                 self.closeConnection()
-            if len(args) == 2 and args[0] == "/kick":
-                username = args[1]
-
-                # CollectionOfUsers.remove_user(username)
-                self.sendAndShowMsg(username + " got kicked!")
-                self.users.inactiveUser(username)
-                # if self.users.doesThisUserExistAndNotActive(username):
-                #    return username
-            if args[0] == "#":
+            if self.server_input == "/kick":
+                self.closeConnection()
+            else:
                 self.sendMsgBySocketHandler()
 
     def sendMsgBySocketHandler(self):

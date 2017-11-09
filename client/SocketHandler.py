@@ -30,5 +30,5 @@ class SocketHandler:
                 msg = self.clientSocket.recv(1024).decode() # while loop with recieve message from client(s)
                 self.guiHandler.showMessage(msg) # send text message recieved from socket to gui
             except:
-                self.guiHandler.showMessage("desconnected...")
+                self.guiHandler.showMessage("disconnected...")
                 return
