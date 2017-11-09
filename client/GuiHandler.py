@@ -33,27 +33,28 @@ class GuiHandler:
 
     def startMainGui(self):
 
+        def sendMsgBySocketHandler(event):
+            self.socketHandler.sendMsg(self.entryOfUser.get())
+            self.entryOfUser.delete(0, tkinter.END)
+
         self.root = tkinter.Tk()
         scroll = tkinter.Scrollbar(self.root)
         scroll.grid(row=0, column=1, sticky=tkinter.N+tkinter.S)
         self.chattContents = tkinter.Text(self.root, yscrollcommand = scroll.set)
-        #self.send_text.focus_set()
         self.chattContents.grid(row=0, column=0)
         scroll.config(command=self.chattContents.yview)
         self.entryOfUser = tkinter.Entry(self.root)
         self.entryOfUser.grid(row=1, column = 0)
-        self.entryOfUser.bind(sequence="<Return>", func=self.sendMsgBySocketHandler())
+
+        self.entryOfUser.bind("<Return>", sendMsgBySocketHandler)
+
         self.buttonToTrigg = tkinter.Button(self.root, text="SEND")
-        self.buttonToTrigg.bind(sequence="<Button-1>", func=self.sendMsgBySocketHandler())
+        self.buttonToTrigg.bind("<Button-1>", sendMsgBySocketHandler)
         self.buttonToTrigg.grid(row=1, column=1)
 
 
         self.root.mainloop()
 
-    def sendMsgBySocketHandler(self):
-
-        self.socketHandler.sendMsg(self.entryOfUser.get())
-        self.entryOfUser.delete(0, tkinter.END)
 
 
     def startIntroGui(self):
